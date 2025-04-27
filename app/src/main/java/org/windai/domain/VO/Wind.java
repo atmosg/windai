@@ -1,6 +1,6 @@
-package org.windai.domain.VO;
+package org.windai.domain.vo;
 
-import org.windai.common.unit.SpeedUnit;
+import org.windai.domain.unit.SpeedUnit;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,8 +22,8 @@ public class Wind {
     double crosswindGusts = Math.round(gusts * Math.abs(Math.sin(radians)));
 
     return Wind.builder()
-        .direction(this.direction)
         .speed((int) crosswind)
+        .direction(this.direction)
         .gusts((int) crosswindGusts)
         .speedUnit(this.speedUnit)
         .build();

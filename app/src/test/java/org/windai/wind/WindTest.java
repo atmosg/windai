@@ -4,12 +4,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.windai.common.unit.LengthUnit;
-import org.windai.common.unit.SpeedUnit;
-import org.windai.domain.VO.Runway;
-import org.windai.domain.VO.Wind;
 import org.windai.domain.policy.MinimumCrosswindPolicyType;
 import org.windai.domain.service.WindOperation;
+import org.windai.domain.unit.LengthUnit;
+import org.windai.domain.unit.SpeedUnit;
+import org.windai.domain.vo.Runway;
+import org.windai.domain.vo.Wind;
 
 public class WindTest {
 
@@ -38,6 +38,8 @@ public class WindTest {
       .gusts(25)
       .speedUnit(SpeedUnit.KT)
       .build();
+
+    System.out.println("unit:" + wind.getSpeedUnit());
 
     int speed = wind.getSpeed();
     double kt = wind.getSpeedUnit().convertTo(speed, SpeedUnit.KT);

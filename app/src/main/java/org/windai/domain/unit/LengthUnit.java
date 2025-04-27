@@ -1,4 +1,4 @@
-package org.windai.common.unit;
+package org.windai.domain.unit;
 
 import lombok.AllArgsConstructor;
 

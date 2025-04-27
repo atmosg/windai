@@ -1,4 +1,4 @@
-package org.windai.common.specification;
+package org.windai.domain.specification.shared;
 
 public interface Specification<T> {
   

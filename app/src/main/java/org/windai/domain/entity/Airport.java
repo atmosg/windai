@@ -1,6 +1,8 @@
-package org.windai.domain.VO;
+package org.windai.domain.entity;
 
 import java.util.List;
+
+import org.windai.domain.vo.Runway;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -11,9 +13,9 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class Airport {
   
-  private final String icao;
-  private final String iata;
-  private final List<Runway> runways;
+  private String icao;
+  private String iata;
+  private List<Runway> runways;
 
   public Airport(String icao, String iata, List<Runway> runways) {
     if (icao.length() != 4) throw new IllegalArgumentException("ICAO code must be 4 characters long.");

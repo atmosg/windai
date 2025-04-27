@@ -1,8 +1,7 @@
-package org.windai.domain.VO;
+package org.windai.domain.vo;
 
-import org.windai.common.unit.LengthUnit;
+import org.windai.domain.unit.LengthUnit;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
