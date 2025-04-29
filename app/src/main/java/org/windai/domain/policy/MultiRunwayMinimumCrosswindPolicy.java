@@ -2,6 +2,7 @@ package org.windai.domain.policy;
 
 import java.util.List;
 
+import org.windai.domain.exception.GenericPolicyException;
 import org.windai.domain.unit.LengthUnit;
 import org.windai.domain.vo.Runway;
 import org.windai.domain.vo.Wind;
@@ -17,7 +18,7 @@ public class MultiRunwayMinimumCrosswindPolicy implements MinimumCrosswindPolicy
   @Override
   public int calculate(Wind wind, List<Runway> runways) {
     if (runways.size() < 2) {
-      throw new IllegalArgumentException("At least two runway is required.");
+      throw new GenericPolicyException("At least two runway is required.");
     }
 
     boolean flag = isEveryRunwayBelowThreshold(runways);
