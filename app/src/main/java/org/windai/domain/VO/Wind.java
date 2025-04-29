@@ -11,13 +11,13 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class Wind {
   
+  private final WindDirection direction;
   private final int speed;
-  private final int direction;
   private final int gusts;
   private final SpeedUnit speedUnit;
 
   public Wind calculateCrosswind(int runwayHeading) {
-    double radians = Math.toRadians(direction - 10*runwayHeading);
+    double radians = Math.toRadians(direction.getDegreeOrThrow() - 10*runwayHeading);
     double crosswind = Math.round(speed * Math.abs(Math.sin(radians)));
     double crosswindGusts = Math.round(gusts * Math.abs(Math.sin(radians)));
 

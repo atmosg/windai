@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum LengthUnit {
   METER(1.0),
-  FEET(3.28084);
+  FEET(3.28084),
+  MILE(0.000621371);
 
   private final double toMeterFactor;
 

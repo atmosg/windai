@@ -4,22 +4,29 @@ import java.util.List;
 
 import org.windai.domain.policy.MinimumCrosswindPolicyType;
 import org.windai.domain.policy.MultiRunwayMinimumCrosswindPolicy;
-import org.windai.domain.policy.SoleRunwayMinimumCrosswindPolicy;
+import org.windai.domain.policy.SingleRunwayMinimumCrosswindPolicy;
 import org.windai.domain.unit.LengthUnit;
 import org.windai.domain.vo.Runway;
 import org.windai.domain.vo.Wind;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class WindOperation {
-  
+
+  private double runwayLengthThreshold = 8000.0;
+  private LengthUnit lengthUnit = LengthUnit.METER;
+
   public int calculateMinimumCrosswind(Wind wind, List<Runway> runways, MinimumCrosswindPolicyType policyType) {
     switch (policyType) {
       case MULTI:
-        return new MultiRunwayMinimumCrosswindPolicy(8000.0, LengthUnit.FEET).calculate(wind, runways);
-      case SOLE:
-        return new SoleRunwayMinimumCrosswindPolicy().calculate(wind, runways);
+        return new MultiRunwayMinimumCrosswindPolicy(runwayLengthThreshold, LengthUnit.FEET).calculate(wind, runways);
+      case SINGLE:
+        return new SingleRunwayMinimumCrosswindPolicy().calculate(wind, runways);
       default:
         throw new IllegalArgumentException("Invalid policy type: " + policyType);
     }

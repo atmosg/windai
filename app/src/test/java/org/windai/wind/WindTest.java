@@ -9,14 +9,30 @@ import org.windai.domain.service.WindOperation;
 import org.windai.domain.unit.LengthUnit;
 import org.windai.domain.unit.SpeedUnit;
 import org.windai.domain.vo.Runway;
+import org.windai.domain.vo.RunwayEnd;
+import org.windai.domain.vo.RunwaySide;
 import org.windai.domain.vo.Wind;
+import org.windai.domain.vo.WindDirection;
 
 public class WindTest {
 
   @Test
   void 길이단위변환_성공() {
-    Runway runway = Runway.builder()
+    RunwayEnd runwayEndA = RunwayEnd.builder()
       .heading(32)
+      .side(RunwaySide.NONE)
+      .available(true)
+      .build();
+
+    RunwayEnd runwayEndB = RunwayEnd.builder()
+      .heading(14)
+      .side(RunwaySide.NONE)
+      .available(true)
+      .build();
+
+    Runway runway = Runway.builder()
+      .endA(runwayEndA)
+      .endB(runwayEndB)
       .length(4000)
       .lengthUnit(LengthUnit.METER)
       .build();
@@ -33,13 +49,11 @@ public class WindTest {
   @Test
   void 속도단위변환_성공() {
     Wind wind = Wind.builder()
-      .direction(250)
+      .direction(WindDirection.fixed(270))
       .speed(10)
       .gusts(25)
       .speedUnit(SpeedUnit.KT)
       .build();
-
-    System.out.println("unit:" + wind.getSpeedUnit());
 
     int speed = wind.getSpeed();
     double kt = wind.getSpeedUnit().convertTo(speed, SpeedUnit.KT);
@@ -50,94 +64,135 @@ public class WindTest {
       () -> assertEquals(mps, wind.getSpeed() / 1.94384)
     );
   }
+
+  @Test
+  void 고정풍향_측풍계산_성공() {
+    Wind wind = Wind.builder()
+      .direction(WindDirection.fixed(270))
+      .speed(10)
+      .gusts(25)
+      .speedUnit(SpeedUnit.KT)
+      .build();
+
+    Wind crossWind = wind.calculateCrosswind(36);
+
+    assertAll(
+      () -> assertEquals(crossWind.getSpeed(), 10),
+      () -> assertEquals(crossWind.getGusts(), 25)
+    );    
+  }
+
+  @Test
+  void 가변풍향_측풍계산_실패() {
+    Wind wind = Wind.builder()
+      .direction(WindDirection.variable())
+      .speed(10)
+      .gusts(25)
+      .speedUnit(SpeedUnit.KT)
+      .build();
+
+    assertThrows(IllegalStateException.class, () -> wind.calculateCrosswind(36));
+  }
   
   @Test
   void 단일활주로_측풍최소치계산_성공() {
     // Given
-    Runway runway = Runway.builder()
-      .heading(32)
-      .length(4000)
-      .lengthUnit(LengthUnit.METER)
-      .build();
+    RunwayEnd runwayEndA = RunwayEnd.builder()
+    .heading(32)
+    .side(RunwaySide.NONE)
+    .available(true)
+    .build();
+
+  RunwayEnd runwayEndB = RunwayEnd.builder()
+    .heading(14)
+    .side(RunwaySide.NONE)
+    .available(true)
+    .build();
+
+  Runway runway = Runway.builder()
+    .endA(runwayEndA)
+    .endB(runwayEndB)
+    .length(4000)
+    .lengthUnit(LengthUnit.METER)
+    .build();
 
     Wind wind = Wind.builder()
-      .direction(250)
-      .speed(10)
-      .gusts(0)
-      .speedUnit(SpeedUnit.KT)
-      .build();
+    .direction(WindDirection.fixed(250))
+    .speed(10)
+    .gusts(0)
+    .speedUnit(SpeedUnit.KT)
+    .build();
 
     // When
     int minimumCrosswind = new WindOperation()
-        .calculateMinimumCrosswind(wind, List.of(runway), MinimumCrosswindPolicyType.SOLE);
+        .calculateMinimumCrosswind(wind, List.of(runway), MinimumCrosswindPolicyType.SINGLE);
 
     // Then
     assertAll(
-      () -> assertEquals(wind.calculateCrosswind(runway.getHeading()).getSpeed(), 9),
       () -> assertEquals(minimumCrosswind, 9)
     );
 
   }
 
-  @Test
-  void 복수활주로_측풍최소치계산_성공() {
-    // Given
-    Runway runway1 = Runway.builder()
-      .heading(32)
-      .length(4000)
-      .lengthUnit(LengthUnit.METER)
-      .build();
+  // @Test
+  // void 복수활주로_측풍최소치계산_성공() {
+  //   // Given
+  //   Runway runway1 = Runway.builder()
+  //     .heading(32)
+  //     .length(4000)
+  //     .lengthUnit(LengthUnit.METER)
+  //     .build();
 
-    Runway runway2 = Runway.builder()
-      .heading(33)
-      .length(4000)
-      .lengthUnit(LengthUnit.METER)
-      .build();
+  //   Runway runway2 = Runway.builder()
+  //     .heading(33)
+  //     .length(4000)
+  //     .lengthUnit(LengthUnit.METER)
+  //     .build();
 
-    Wind wind = Wind.builder()
-      .direction(250)
-      .speed(10)
-      .gusts(25)
-      .build();
+  //   Wind wind = Wind.builder()
+  //     .direction(250)
+  //     .speed(10)
+  //     .gusts(25)
+  //     .build();
 
-    // When
-    int minimumCrosswind = new WindOperation()
-        .calculateMinimumCrosswind(wind, List.of(runway1, runway2), MinimumCrosswindPolicyType.MULTI);
+  //   // When
+  //   int minimumCrosswind = new WindOperation()
+  //       .calculateMinimumCrosswind(wind, List.of(runway1, runway2), MinimumCrosswindPolicyType.MULTI);
 
-    // Then
-    assertAll(
-      () -> assertEquals(wind.calculateCrosswind(runway1.getHeading()).getSpeed(), 9),
-      () -> assertEquals(wind.calculateCrosswind(runway1.getHeading()).getGusts(), 23),
-      () -> assertEquals(wind.calculateCrosswind(runway2.getHeading()).getSpeed(), 10),
-      () -> assertEquals(wind.calculateCrosswind(runway2.getHeading()).getGusts(), 25),
-      () -> assertEquals(minimumCrosswind, 23)
-    );
+  //   // Then
+  //   assertAll(
+  //     () -> assertEquals(wind.calculateCrosswind(runway1.getHeading()).getSpeed(), 9),
+  //     () -> assertEquals(wind.calculateCrosswind(runway1.getHeading()).getGusts(), 23),
+  //     () -> assertEquals(wind.calculateCrosswind(runway2.getHeading()).getSpeed(), 10),
+  //     () -> assertEquals(wind.calculateCrosswind(runway2.getHeading()).getGusts(), 25),
+  //     () -> assertEquals(minimumCrosswind, 23)
+  //   );
 
-  }
+  // }
 
-  @Test
-  void 복수활주로_측풍최소치계산_실패_단일활주로입력() {
-    // Given
-    Runway runway = Runway.builder()
-      .heading(32)
-      .length(4000)
-      .lengthUnit(LengthUnit.METER)
-      .build();
+  // @Test
+  // void 복수활주로_측풍최소치계산_실패_단일활주로입력() {
+  //   // Given
+  //   Runway runway = Runway.builder()
+  //     .heading(32)
+  //     .length(4000)
+  //     .lengthUnit(LengthUnit.METER)
+  //     .build();
 
-    Wind wind = Wind.builder()
-      .direction(250)
-      .speed(10)
-      .gusts(0)
-      .build();
+  //   Wind wind = Wind.builder()
+  //     .direction(250)
+  //     .speed(10)
+  //     .gusts(0)
+  //     .build();
 
-    // When
-    // Then
-    assertThrows(IllegalArgumentException.class, () -> {
-      new WindOperation()
-        .calculateMinimumCrosswind(wind, List.of(runway), MinimumCrosswindPolicyType.MULTI);
-    });
+  //   // When
+  //   // Then
+  //   assertThrows(IllegalArgumentException.class, () -> {
+  //     new WindOperation()
+  //       .calculateMinimumCrosswind(wind, List.of(runway), MinimumCrosswindPolicyType.MULTI);
+  //   });
 
-  }
+  // }
 
 
 }

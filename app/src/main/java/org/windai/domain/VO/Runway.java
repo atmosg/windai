@@ -11,22 +11,21 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class Runway {
   
-  private final int heading;
+  private final RunwayEnd endA;
+  private final RunwayEnd endB;
   private final double length;
   private final LengthUnit lengthUnit;
-  
-  public Runway(int heading, double length, LengthUnit lengthUnit) {
-    if (heading < 0 || heading > 36) {
-      throw new IllegalArgumentException("Heading must be between 0 and 36.");
-    }
-
-    this.length = length;
-    this.heading = heading;
-    this.lengthUnit = lengthUnit;
-  }
 
   public double getLengthIn(LengthUnit targetUnit) {
     return lengthUnit.convertTo(length, targetUnit);
+  }
+
+  public String getName() {
+    return endA.getDesignator() + "/" + endB.getDesignator();
+  }
+
+  public String getNameWithoutSide() {
+    return endA.getNumberOnly() + "/" + endB.getNumberOnly();
   }
 
 }

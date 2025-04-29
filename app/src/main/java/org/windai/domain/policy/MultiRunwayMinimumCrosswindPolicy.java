@@ -1,10 +1,14 @@
 package org.windai.domain.policy;
 
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.windai.domain.exception.GenericPolicyException;
 import org.windai.domain.unit.LengthUnit;
 import org.windai.domain.vo.Runway;
+import org.windai.domain.vo.RunwayEnd;
 import org.windai.domain.vo.Wind;
 
 import lombok.AllArgsConstructor;
@@ -21,20 +25,21 @@ public class MultiRunwayMinimumCrosswindPolicy implements MinimumCrosswindPolicy
       throw new GenericPolicyException("At least two runway is required.");
     }
 
-    boolean flag = isEveryRunwayBelowThreshold(runways);
+    boolean allBelowThreshold = isEveryRunwayBelowThreshold(runways);
     
-    int minCrosswind = Integer.MAX_VALUE;
-    
-    for (int i=0; i<runways.size(); i++) {
-      Runway runway = runways.get(i);
-      if (!flag && !isRunwayLongerThan(runway)) continue;
-      
-      Wind crosswind = wind.calculateCrosswind(runway.getHeading());
-      int maxCrosswind = getMaxCrosswind(crosswind);
-      minCrosswind = Math.min(minCrosswind, maxCrosswind);
-    }
-    
-    return minCrosswind;
+    return runways.stream()
+    .filter(runway -> allBelowThreshold || isRunwayLongerThan(runway))
+    .filter(runway -> !isRunwayUnavailable(runway))
+    .flatMap(runway -> Stream.of(runway.getEndA(), runway.getEndB()))
+    .filter(RunwayEnd::isAvailable)
+    .mapToInt(end -> getMaxCrosswind(wind.calculateCrosswind(end.getHeading())))
+    .min()
+    .orElseThrow(() -> new GenericPolicyException("No available runway ends for crosswind calculation."));
+  }
+
+
+  private boolean isRunwayUnavailable(Runway runway) {
+    return !runway.getEndA().isAvailable() && !runway.getEndB().isAvailable();
   }
   
   private boolean isRunwayLongerThan(Runway runway) {
