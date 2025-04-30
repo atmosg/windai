@@ -5,12 +5,10 @@ import java.util.List;
 import org.windai.domain.vo.Runway;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @Builder
-@EqualsAndHashCode
 public class Airport {
   
   private String icao;

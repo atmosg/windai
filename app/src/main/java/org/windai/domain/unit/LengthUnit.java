@@ -12,7 +12,8 @@ public enum LengthUnit {
 
   public double convertTo(double length, LengthUnit targetUnit) {
     if (this == targetUnit) return length;
-    double lengthInMeters = length / this.toMeterFactor;
+    double lengthInMeters = length / toMeterFactor;
+    
     
     return lengthInMeters * targetUnit.toMeterFactor;
   }

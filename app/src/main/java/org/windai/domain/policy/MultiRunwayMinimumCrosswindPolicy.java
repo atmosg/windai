@@ -1,8 +1,6 @@
 package org.windai.domain.policy;
 
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.windai.domain.exception.GenericPolicyException;
