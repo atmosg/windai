@@ -29,7 +29,6 @@ public class MultiRunwayMinimumCrosswindPolicy implements MinimumCrosswindPolicy
     
     return runways.stream()
     .filter(runway -> allBelowThreshold || isRunwayLongerThan(runway))
-    .filter(runway -> !isRunwayUnavailable(runway))
     .flatMap(runway -> Stream.of(runway.getEndA(), runway.getEndB()))
     .filter(RunwayEnd::isAvailable)
     .mapToInt(end -> getMaxCrosswind(wind.calculateCrosswind(end.getHeading())))
@@ -37,11 +36,6 @@ public class MultiRunwayMinimumCrosswindPolicy implements MinimumCrosswindPolicy
     .orElseThrow(() -> new GenericPolicyException("No available runway ends for crosswind calculation."));
   }
 
-
-  private boolean isRunwayUnavailable(Runway runway) {
-    return !runway.getEndA().isAvailable() && !runway.getEndB().isAvailable();
-  }
-  
   private boolean isRunwayLongerThan(Runway runway) {
     return runway.getLengthIn(lengthUnit) > runwayLengthThreshold;
   }
