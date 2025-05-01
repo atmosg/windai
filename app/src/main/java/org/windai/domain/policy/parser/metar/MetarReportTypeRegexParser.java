@@ -10,9 +10,9 @@ import org.windai.domain.vo.MetarReportType;
 public class MetarReportTypeRegexParser extends RegexReportParser<MetarReportType> {
 
   private static final String REPORT_TYPE_REGEX = 
-      Arrays.stream(MetarReportType.values())
-            .map(Enum::name)
-            .collect(Collectors.joining("|", "(", ")"));
+    Arrays.stream(MetarReportType.values())
+      .map(Enum::name)
+      .collect(Collectors.joining("|", "(", ")"));
     
   @Override
   public MetarReportType parse(String rawText) {
