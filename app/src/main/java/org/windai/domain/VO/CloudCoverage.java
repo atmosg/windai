@@ -5,15 +5,15 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum CloudCoverage {
 
-  SKC("Sky clear"),
-  CLR("Clear"),
   FEW("Few"),
   SCT("Scattered"),
   BKN("Broken"),
   OVC("Overcast"),
+  VV("Vertical visibility"),
+  SKC("Sky clear"),
+  CLR("Clear"),
   NSC("No significant cloud"),
-  NCD("No cloud detected"),
-  VV("Vertical visibility");
+  NCD("No cloud detected");
 
   private final String description;
 

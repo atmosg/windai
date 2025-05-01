@@ -12,8 +12,8 @@ import org.windai.domain.vo.Visibility;
 public class VisibilityRegexParser extends RegexReportParser<Visibility> {
 
   private static final String VISIBILITY_REGEX = 
-    Arrays.stream(VisibilityRegexTypePolicy.values())
-          .map(VisibilityRegexTypePolicy::getRegex)
+    Arrays.stream(VisibilityRegexType.values())
+          .map(VisibilityRegexType::getRegex)
           .collect(Collectors.joining("|"));
 
   @Override
@@ -25,7 +25,7 @@ public class VisibilityRegexParser extends RegexReportParser<Visibility> {
       }
 
       int visibility = -1;
-      for (VisibilityRegexTypePolicy type : VisibilityRegexTypePolicy.values()) {
+      for (VisibilityRegexType type : VisibilityRegexType.values()) {
         String match = matcher.group(type.getGroupName());
         
         if (match == null || match.isEmpty()) continue;

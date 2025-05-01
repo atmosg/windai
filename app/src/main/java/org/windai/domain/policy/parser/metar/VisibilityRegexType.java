@@ -6,7 +6,7 @@ import org.windai.domain.unit.LengthUnit;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum VisibilityRegexTypePolicy {
+public enum VisibilityRegexType {
 
   DIGIT("digit","(?<digit>\\s\\d{3,4}\\s)"),
   CAVOK("cavok","(?<cavok>\\s*CAVOK\\s)"),
