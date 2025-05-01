@@ -2,9 +2,9 @@ package org.windai.domain.service;
 
 import java.util.List;
 
-import org.windai.domain.policy.MinimumCrosswindPolicyType;
-import org.windai.domain.policy.MultiRunwayMinimumCrosswindPolicy;
-import org.windai.domain.policy.SingleRunwayMinimumCrosswindPolicy;
+import org.windai.domain.policy.crosswind.MinimumCrosswindPolicyType;
+import org.windai.domain.policy.crosswind.MultiRunwayMinimumCrosswindPolicy;
+import org.windai.domain.policy.crosswind.SingleRunwayMinimumCrosswindPolicy;
 import org.windai.domain.unit.LengthUnit;
 import org.windai.domain.vo.Runway;
 import org.windai.domain.vo.Wind;
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class WindOperation {
 
   private double runwayLengthThreshold = 8000.0;
-  private LengthUnit lengthUnit = LengthUnit.METER;
+  private LengthUnit lengthUnit = LengthUnit.METERS;
 
   public int calculateMinimumCrosswind(Wind wind, List<Runway> runways, MinimumCrosswindPolicyType policyType) {
     switch (policyType) {

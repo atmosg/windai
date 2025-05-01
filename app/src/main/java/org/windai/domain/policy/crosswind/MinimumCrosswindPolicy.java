@@ -1,4 +1,4 @@
-package org.windai.domain.policy;
+package org.windai.domain.policy.crosswind;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.windai.domain.policy.MinimumCrosswindPolicyType;
+import org.windai.domain.policy.crosswind.MinimumCrosswindPolicyType;
 import org.windai.domain.service.WindOperation;
 import org.windai.domain.unit.LengthUnit;
 import org.windai.domain.unit.SpeedUnit;
@@ -34,11 +34,11 @@ public class WindTest {
       .endA(runwayEndA)
       .endB(runwayEndB)
       .length(4000)
-      .lengthUnit(LengthUnit.METER)
+      .lengthUnit(LengthUnit.METERS)
       .build();
 
     double lengthInFeet = runway.getLengthIn(LengthUnit.FEET);
-    double lengthInMeters = runway.getLengthIn(LengthUnit.METER);
+    double lengthInMeters = runway.getLengthIn(LengthUnit.METERS);
 
     assertAll(
       () -> assertEquals(lengthInFeet, runway.getLength() * 3.28084),
@@ -113,7 +113,7 @@ public class WindTest {
     .endA(runwayEndA)
     .endB(runwayEndB)
     .length(4000)
-    .lengthUnit(LengthUnit.METER)
+    .lengthUnit(LengthUnit.METERS)
     .build();
 
     Wind wind = Wind.builder()
@@ -129,7 +129,7 @@ public class WindTest {
 
     // Then
     assertAll(
-      () -> assertEquals(minimumCrosswind, 9)
+      () -> assertEquals(9, minimumCrosswind)
     );
 
   }

@@ -1,10 +1,11 @@
 package org.windai.domain.unit;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @AllArgsConstructor
 public enum LengthUnit {
-  METER(1.0),
+  METERS(1.0),
   FEET(3.28084),
   MILE(0.000621371);
 
@@ -13,8 +14,7 @@ public enum LengthUnit {
   public double convertTo(double length, LengthUnit targetUnit) {
     if (this == targetUnit) return length;
     double lengthInMeters = length / toMeterFactor;
-    
-    
+        
     return lengthInMeters * targetUnit.toMeterFactor;
   }
 }

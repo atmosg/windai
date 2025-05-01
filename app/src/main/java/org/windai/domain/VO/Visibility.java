@@ -3,10 +3,12 @@ package org.windai.domain.vo;
 import org.windai.domain.unit.LengthUnit;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 public class Visibility {
 
   private final int visibility;
