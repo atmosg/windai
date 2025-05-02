@@ -11,12 +11,16 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 import org.windai.domain.exception.GenericPolicyException;
+import org.windai.domain.policy.parser.metar.CloudGroupRegexParser;
 import org.windai.domain.policy.parser.metar.MetarReportTypeRegexParser;
 import org.windai.domain.policy.parser.metar.VisibilityRegexParser;
 import org.windai.domain.policy.parser.metar.WindRegexParser;
 import org.windai.domain.policy.parser.shared.ObservationTimeRegexParser;
 import org.windai.domain.unit.LengthUnit;
 import org.windai.domain.unit.SpeedUnit;
+import org.windai.domain.vo.CloudCoverage;
+import org.windai.domain.vo.CloudGroup;
+import org.windai.domain.vo.CloudType;
 import org.windai.domain.vo.MetarReportType;
 import org.windai.domain.vo.Visibility;
 import org.windai.domain.vo.Wind;
@@ -164,6 +168,53 @@ public class ParserTest {
         .build()
       )
     );
+  }
+
+  @Test
+  void 고도가_없는_구름정보_파싱성공() {
+    String rawText = "KHYI 010056Z AUTO 20004MPS 10SM CLR 09/07 A2999 RMK AO2 SLP153 T00940072";
+
+    CloudGroupRegexParser parser = new CloudGroupRegexParser();
+    CloudGroup cloudGroup = parser.parse(rawText);
+
+    assertAll(
+      () -> assertEquals(cloudGroup.size(), 1),
+      () -> assertEquals(cloudGroup.getClouds().get(0).getCoverage(), CloudCoverage.CLR),
+      () -> assertThrows(IllegalStateException.class, () -> 
+        cloudGroup.getClouds().get(0).getAltitudeOrThrow()
+      )
+    );
+  }
+
+  @Test
+  void 고도가_존재하는_구름정보_파싱성공() {
+    String metar = "RKSI 010300Z 17008KT 4000 -RA SCT006 BKN025 OVC070CB 13/13 Q1007 NOSIG";
+
+    CloudGroupRegexParser parser = new CloudGroupRegexParser();
+    CloudGroup cloudGroup = parser.parse(metar);
+
+    assertAll(
+      () -> assertEquals(cloudGroup.size(), 3),
+      () -> assertEquals(cloudGroup.getClouds().get(0).getCoverage(), CloudCoverage.SCT),      
+      () -> assertEquals(cloudGroup.getClouds().get(0).getType(), CloudType.NONE),
+      () -> assertEquals(cloudGroup.getClouds().get(0).getAltitudeOrThrow(), 600),
+      () -> assertEquals(cloudGroup.getClouds().get(1).getCoverage(), CloudCoverage.BKN),      
+      () -> assertEquals(cloudGroup.getClouds().get(1).getType(), CloudType.NONE),
+      () -> assertEquals(cloudGroup.getClouds().get(1).getAltitudeOrThrow(), 2500),
+      () -> assertEquals(cloudGroup.getClouds().get(2).getCoverage(), CloudCoverage.OVC),      
+      () -> assertEquals(cloudGroup.getClouds().get(2).getType(), CloudType.CB),
+      () -> assertEquals(cloudGroup.getClouds().get(2).getAltitudeOrThrow(), 7000)
+    );
+  }
+
+  @Test
+  void 구름정보가_없는_메타_파싱성공() {
+    String metar = "RKSI 010300Z 17008KT 4000 -RA 13/13 Q1007 NOSIG";
+
+    CloudGroupRegexParser parser = new CloudGroupRegexParser();
+    CloudGroup cloudGroup = parser.parse(metar);
+
+    assertEquals(cloudGroup.size(), 0);
   }
 
 }

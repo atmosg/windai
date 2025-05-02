@@ -1,7 +1,9 @@
 package org.windai.domain.vo;
 
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@ToString
 @EqualsAndHashCode
 public class Cloud {
   

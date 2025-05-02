@@ -14,17 +14,19 @@ public class Metar {
 
   private final String rawText;
   
+  // required fields (ICAO Annex 3)
   private final String stationId;
   private final MetarReportType reportType;
   private final ZonedDateTime observationTime;
-  
   private final Wind wind;
   private final Visibility visibility;
-  private final List<Weather> weather;
-  private final List<Cloud> cloud;
   private final TemperaturePair temperaturePair;
   private final Pressure altimeter;
-
+  
+  // optional fields (ICAO Annex 3)
+  private final List<Weather> weather;
+  private final CloudGroup cloud;
   private final String remarks;
+
 
 }
