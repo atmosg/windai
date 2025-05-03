@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.windai.domain.exception.GenericSpecificationExeception;
 import org.windai.domain.policy.parser.metar.CloudGroupRegexParser;
 import org.windai.domain.vo.Cloud;
 import org.windai.domain.vo.CloudCoverage;
@@ -19,6 +20,32 @@ public class CloudParserTest {
   List<String> data = new MetarTestData().getTestData();
 
   @Test
+  void 고도가_없는_구름객체를_생성할때_고도를_넣으면_예외가_발생한다() {
+    // given, when, then
+
+    assertThrows(GenericSpecificationExeception.class, () -> 
+      Cloud.builder()
+        .coverage(CloudCoverage.CLR)
+        .altitude(200)
+        .type(CloudType.NONE)
+        .build()
+    );
+  }
+
+  @Test
+  void 고도가_필수인_구름객체를_생성할때_고도를_누락하면_예외가_발생한다() {
+    // given, when, then
+
+    assertThrows(GenericSpecificationExeception.class, () -> 
+      Cloud.builder()
+        .coverage(CloudCoverage.BKN)
+        .altitude(null)
+        .type(CloudType.NONE)
+        .build()
+    );
+  }
+
+  @Test
   void 고도가_없는_구름정보의_경우_altitude가_null인_구름객체를_포함하는_구름군_객체를_반환한다() {
     String rawText = "KHYI 010056Z AUTO 20004MPS 10SM CLR 09/07 A2999 RMK AO2 SLP153 T00940072";
 
@@ -27,14 +54,19 @@ public class CloudParserTest {
     CloudGroup cloudGroup = parser.parse(rawText);
 
     // then
-    Cloud expected1 = Cloud.withoutAltitude(CloudCoverage.CLR, CloudType.NONE);
+    Cloud cloud = Cloud.builder()
+      .coverage(CloudCoverage.CLR)
+      .altitude(null)
+      .type(CloudType.NONE)
+      .build();
+    
     CloudGroup expected = CloudGroup.builder()
-      .clouds(List.of(expected1))
+      .clouds(List.of(cloud))
       .build();
 
     assertAll(
       () -> assertEquals(expected, cloudGroup),
-      () -> assertThrows(IllegalStateException.class, () -> 
+      () -> assertThrows(GenericSpecificationExeception.class, () -> 
         cloudGroup.getClouds().get(0).getAltitudeOrThrow()
       )
     );
@@ -48,7 +80,11 @@ public class CloudParserTest {
     CloudGroup cloudGroup = parser.parse(rawText);
 
     // then
-    Cloud expected1 = Cloud.withAltitude(CloudCoverage.SCT, 600, CloudType.NONE);
+    Cloud expected1 = Cloud.builder()
+      .coverage(CloudCoverage.SCT)
+      .altitude(600)
+      .type(CloudType.NONE)
+      .build();
 
     CloudGroup expected = CloudGroup.builder()
       .clouds(List.of(expected1))
@@ -66,9 +102,24 @@ public class CloudParserTest {
     CloudGroup cloudGroup = parser.parse(rawText);
 
     // then
-    Cloud expected1 = Cloud.withAltitude(CloudCoverage.SCT, 600, CloudType.NONE);
-    Cloud expected2 = Cloud.withAltitude(CloudCoverage.BKN, 2500, CloudType.NONE);
-    Cloud expected3 = Cloud.withAltitude(CloudCoverage.OVC, 7000, CloudType.CB);
+    Cloud expected1 = Cloud.builder()
+      .coverage(CloudCoverage.SCT)
+      .altitude(600)
+      .type(CloudType.NONE)
+      .build();
+    
+    Cloud expected2 = Cloud.builder()
+      .coverage(CloudCoverage.BKN)
+      .altitude(2500)
+      .type(CloudType.NONE)
+      .build();
+    
+    
+    Cloud expected3 = Cloud.builder()
+      .coverage(CloudCoverage.OVC)
+      .altitude(7000)
+      .type(CloudType.CB)
+      .build();
 
     CloudGroup expected = CloudGroup.builder()
       .clouds(List.of(expected1, expected2, expected3))
@@ -100,7 +151,11 @@ public class CloudParserTest {
     CloudGroup cloudGroup1c = parser.parse(rawText1c);
 
     // then
-    Cloud expected1 = Cloud.withAltitude(CloudCoverage.SCT, 600, CloudType.NONE);
+    Cloud expected1 = Cloud.builder()
+      .coverage(CloudCoverage.SCT)
+      .altitude(600)
+      .type(CloudType.NONE)
+      .build();
     
     CloudGroup expected = CloudGroup.builder()
       .clouds(List.of(expected1))
@@ -126,8 +181,18 @@ public class CloudParserTest {
     CloudGroup cloudGroup1b = parser.parse(rawText1b);
 
     // then
-    Cloud expected1 = Cloud.withAltitude(CloudCoverage.SCT, 600, CloudType.NONE);
-    Cloud expected2 = Cloud.withAltitude(CloudCoverage.BKN, 2500, CloudType.NONE);
+    Cloud expected1 = Cloud.builder()
+      .coverage(CloudCoverage.SCT)
+      .altitude(600)
+      .type(CloudType.NONE)
+      .build();
+      
+    
+    Cloud expected2 = Cloud.builder()
+      .coverage(CloudCoverage.BKN)
+      .altitude(2500)
+      .type(CloudType.NONE)
+      .build();
     
     CloudGroup expected = CloudGroup.builder()
       .clouds(List.of(expected1, expected2))

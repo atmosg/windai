@@ -38,10 +38,17 @@ public class CloudRegexParser extends RegexReportParser<Cloud> {
         throw new GenericPolicyException("Altitude not found in report: " + rawText);
       }
 
-      return Cloud.withAltitude(coverage, altitude, type);
-    } else {
-      return Cloud.withoutAltitude(coverage, type);
-    }
+      return Cloud.builder()
+        .coverage(coverage)
+        .altitude(altitude)
+        .type(type)
+        .build();
+    } 
+    
+    return Cloud.builder()
+      .coverage(coverage)
+      .type(type)
+      .build();
   }
   
 }

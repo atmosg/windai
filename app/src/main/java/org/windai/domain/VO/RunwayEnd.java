@@ -7,18 +7,18 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
-@Builder
 @EqualsAndHashCode
 public class RunwayEnd {
   
-  private final int heading;
+  private final Integer heading;
   private final RunwaySide side;
   private final boolean available;
 
-  private static final RunwayHeadingSpec HEADING_SPEC = new RunwayHeadingSpec();
+  private static final RunwayHeadingSpec headingSpec = new RunwayHeadingSpec();
 
-  public RunwayEnd(int heading, RunwaySide side, boolean available) {
-    HEADING_SPEC.check(heading);
+  @Builder
+  public RunwayEnd(Integer heading, RunwaySide side, boolean available) {
+    headingSpec.check(heading);
 
     this.heading = heading;
     this.side = side;

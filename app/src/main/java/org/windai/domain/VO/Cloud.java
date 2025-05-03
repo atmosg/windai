@@ -1,49 +1,47 @@
 package org.windai.domain.vo;
 
+import java.util.Optional;
+
+import org.windai.domain.exception.GenericSpecificationExeception;
+import org.windai.domain.specification.CloudAltitudeSpec;
+
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
 public class Cloud {
   
+  @Getter
   private final CloudCoverage coverage;
+
   private final Integer altitude;
+
+  @Getter
   private final CloudType type;
 
-  private Cloud(CloudCoverage coverage, Integer altitude, CloudType type) {
+  private static final CloudAltitudeSpec altitudeSpec = new CloudAltitudeSpec();
+
+  @Builder
+  public Cloud(CloudCoverage coverage, Integer altitude, CloudType type) {
     this.coverage = coverage;
     this.altitude = altitude;
     this.type = type;
+
+    altitudeSpec.check(this);
   }
 
-  public static Cloud withoutAltitude(CloudCoverage coverage, CloudType type) {
-    if (coverage.requiresAltitude()) {
-      throw new IllegalStateException(coverage + " requires altitude.");
-    }
-    return new Cloud(coverage, null, type);
-  }
-
-  public static Cloud withAltitude(CloudCoverage coverage, Integer altitude, CloudType type) {
+  public Integer getAltitudeOrThrow() {
     if (!coverage.requiresAltitude()) {
-      throw new IllegalStateException(coverage + " has no fixed altitude.");
-    }
-    return new Cloud(coverage, altitude, type);
-  }
-
-  public int getAltitudeOrThrow() {
-    if (!coverage.requiresAltitude()) {
-      throw new IllegalStateException(coverage + " has no fixed altitude.");
+      throw new GenericSpecificationExeception(coverage + " has no fixed altitude.");
     }
     return altitude;
   }
 
-  public CloudCoverage getCoverage() {
-    return coverage;
-  }
-
-  public CloudType getType() {
-    return type;
+  public Optional<Integer> getAltitudeOptional() {
+    return Optional.ofNullable(altitude);
   }
 
   public boolean hasCloudType() {

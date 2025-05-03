@@ -2,6 +2,9 @@ package org.windai.parser;
 
 import java.util.List;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class MetarTestData {
 
   protected List<String> metars = List.of(
@@ -33,6 +36,10 @@ public class MetarTestData {
 
   public List<String> getTestData() {
     return metars;
+  }
+
+  public List<String> generateWithSpaces(String metar) {
+    return List.of(metar, " "+metar, metar+" ", " "+metar+" ");
   }
   
 }

@@ -15,6 +15,7 @@ import org.windai.domain.vo.Visibility;
 public class VisibilityParserTest {
   
   VisibilityRegexParser parser = new VisibilityRegexParser();
+  MetarTestData test = new MetarTestData();
   List<String> data = new MetarTestData().getTestData();
 
   @Test
@@ -124,79 +125,56 @@ public class VisibilityParserTest {
   void 임의의_시정과_공백을_가진_시정_파싱성공() {
     // given
     String rawText1 = "1200";
-    String rawText1a = "1200 ";
-    String rawText1b = " 1200";
-    String rawText1c = " 1200 ";
-    
     String rawText2 = "CAVOK";
-    String rawText2a = "CAVOK ";
-    String rawText2b = " CAVOK";
-    String rawText2c = " CAVOK ";
-    
     String rawText3 = "P6SM";
-    String rawText3a = "P6SM ";
-    String rawText3b = " P6SM";
-    String rawText3c = " P6SM ";
-    
     String rawText4 = "3/4SM";
-    String rawText4a = "3/4SM ";
-    String rawText4b = " 3/4SM";
-    String rawText4c = " 3/4SM ";
-    
     String rawText5 = "1 3/4SM";
-    String rawText5a = "1 3/4SM ";
-    String rawText5b = " 1 3/4SM";
-    String rawText5c = " 1 3/4SM ";
 
-    // when
-    Visibility visibility1 = parser.parse(rawText1);
-    Visibility visibility1a = parser.parse(rawText1a);
-    Visibility visibility1b = parser.parse(rawText1b);
-    Visibility visibility1c = parser.parse(rawText1c);
-
-    Visibility visibility2 = parser.parse(rawText2);
-    Visibility visibility2a = parser.parse(rawText2a);
-    Visibility visibility2b = parser.parse(rawText2b);
-    Visibility visibility2c = parser.parse(rawText2c);
-
-    Visibility visibility3 = parser.parse(rawText3);
-    Visibility visibility3a = parser.parse(rawText3a);
-    Visibility visibility3b = parser.parse(rawText3b);
-    Visibility visibility3c = parser.parse(rawText3c);
-
-    Visibility visibility4 = parser.parse(rawText4);
-    Visibility visibility4a = parser.parse(rawText4a);
-    Visibility visibility4b = parser.parse(rawText4b);
-    Visibility visibility4c = parser.parse(rawText4c);
-
-    Visibility visibility5 = parser.parse(rawText5);
-    Visibility visibility5a = parser.parse(rawText5a);
-    Visibility visibility5b = parser.parse(rawText5b);
-    Visibility visibility5c = parser.parse(rawText5c);
-    
+    // expected
+    int expected1 = 1200;
+    int expected2 = 9999;
+    int expected3 = 9999;
+    int expected4 = 1207;
+    int expected5 = 2816;
 
     // then
+    int actual1 = (int) test.generateWithSpaces(rawText1).stream()
+      .map(parser::parse)
+      .map(Visibility::getVisibility)
+      .filter(vis -> vis == expected1)
+      .count();
+
+    int actual2 = (int) test.generateWithSpaces(rawText2).stream()
+      .map(parser::parse)
+      .map(Visibility::getVisibility)
+      .filter(vis -> vis == expected2)
+      .count();
+    
+    int actual3 = (int) test.generateWithSpaces(rawText3).stream()
+      .map(parser::parse)
+      .map(Visibility::getVisibility)
+      .filter(vis -> vis == expected3)
+      .count();
+    
+    int actual4 = (int) test.generateWithSpaces(rawText4).stream()
+      .map(parser::parse)
+      .map(Visibility::getVisibility)
+      .filter(vis -> vis == expected4)
+      .count();
+    
+    int actual5 = (int) test.generateWithSpaces(rawText5).stream()
+      .map(parser::parse)
+      .map(Visibility::getVisibility)
+      .filter(vis -> vis == expected5)
+      .count();
+      
+    
     assertAll(
-      () -> assertEquals(1200, visibility1.getVisibility()),
-      () -> assertEquals(1200, visibility1a.getVisibility()),
-      () -> assertEquals(1200, visibility1b.getVisibility()),
-      () -> assertEquals(1200, visibility1c.getVisibility()),
-      () -> assertEquals(9999, visibility2.getVisibility()),
-      () -> assertEquals(9999, visibility2a.getVisibility()),
-      () -> assertEquals(9999, visibility2b.getVisibility()),
-      () -> assertEquals(9999, visibility2c.getVisibility()),
-      () -> assertEquals(9999, visibility3.getVisibility()),
-      () -> assertEquals(9999, visibility3a.getVisibility()),
-      () -> assertEquals(9999, visibility3b.getVisibility()),
-      () -> assertEquals(9999, visibility3c.getVisibility()),
-      () -> assertEquals(1207, visibility4.getVisibility()),
-      () -> assertEquals(1207, visibility4a.getVisibility()),
-      () -> assertEquals(1207, visibility4b.getVisibility()),
-      () -> assertEquals(1207, visibility4c.getVisibility()),
-      () -> assertEquals(2816, visibility5.getVisibility()),
-      () -> assertEquals(2816, visibility5a.getVisibility()),
-      () -> assertEquals(2816, visibility5b.getVisibility()),
-      () -> assertEquals(2816, visibility5c.getVisibility())
+      () -> assertEquals(4, actual1),
+      () -> assertEquals(4, actual2),
+      () -> assertEquals(4, actual3),
+      () -> assertEquals(4, actual4),
+      () -> assertEquals(4, actual5)
     );
   }
 
