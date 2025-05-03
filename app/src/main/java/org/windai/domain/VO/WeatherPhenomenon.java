@@ -1,9 +1,12 @@
 package org.windai.domain.vo;
 
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @AllArgsConstructor
 public enum WeatherPhenomenon {
+  
   DZ("Drizzle"),
   RA("Rain"),
   SN("Snow"),
@@ -26,7 +29,8 @@ public enum WeatherPhenomenon {
   FC("Funnel Cloud / Tornado"),
   SS("Sandstorm"),
   DS("Duststorm"),
-  WS("Wind Shear");
+  WS("Wind Shear"),
+  TS("Thunderstorm");
 
   private final String phenomenon;
 

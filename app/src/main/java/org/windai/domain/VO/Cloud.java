@@ -7,13 +7,13 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Cloud {
   
-  private final Integer altitude;
   private final CloudCoverage coverage;
+  private final Integer altitude;
   private final CloudType type;
 
-  private Cloud(Integer altitude, CloudCoverage coverage, CloudType type) {
-    this.altitude = altitude;
+  private Cloud(CloudCoverage coverage, Integer altitude, CloudType type) {
     this.coverage = coverage;
+    this.altitude = altitude;
     this.type = type;
   }
 
@@ -21,14 +21,14 @@ public class Cloud {
     if (coverage.requiresAltitude()) {
       throw new IllegalStateException(coverage + " requires altitude.");
     }
-    return new Cloud(null, coverage, type);
+    return new Cloud(coverage, null, type);
   }
 
-  public static Cloud withAltitude(Integer altitude, CloudCoverage coverage, CloudType type) {
+  public static Cloud withAltitude(CloudCoverage coverage, Integer altitude, CloudType type) {
     if (!coverage.requiresAltitude()) {
       throw new IllegalStateException(coverage + " has no fixed altitude.");
     }
-    return new Cloud(altitude, coverage, type);
+    return new Cloud(coverage, altitude, type);
   }
 
   public int getAltitudeOrThrow() {

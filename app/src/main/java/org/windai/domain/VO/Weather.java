@@ -1,22 +1,26 @@
 package org.windai.domain.vo;
 
-import java.util.Optional;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
-@Builder
+@ToString
 @EqualsAndHashCode
 public class Weather {
   
   private final WeatherDescriptor descriptor;
-  private final WeatherPhenomenon phenomenon;
+  private final List<WeatherPhenomenon> phenomena;
   private final WeatherInensity intensity;
   
-  public Optional<WeatherDescriptor> getDescriptor() {
-    return Optional.ofNullable(descriptor);
+  @Builder
+  public Weather(WeatherInensity intensity, WeatherDescriptor descriptor, List<WeatherPhenomenon> phenomena) {
+    this.intensity = intensity;
+    this.descriptor = descriptor;
+    this.phenomena = List.copyOf(phenomena);
   }
 
 }

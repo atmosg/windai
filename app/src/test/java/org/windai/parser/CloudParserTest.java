@@ -1,0 +1,143 @@
+package org.windai.parser;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.windai.domain.policy.parser.metar.CloudGroupRegexParser;
+import org.windai.domain.vo.Cloud;
+import org.windai.domain.vo.CloudCoverage;
+import org.windai.domain.vo.CloudGroup;
+import org.windai.domain.vo.CloudType;
+
+public class CloudParserTest {
+  
+  CloudGroupRegexParser parser = new CloudGroupRegexParser();
+  List<String> data = new MetarTestData().getTestData();
+
+  @Test
+  void 고도가_없는_구름정보의_경우_altitude가_null인_구름객체를_포함하는_구름군_객체를_반환한다() {
+    String rawText = "KHYI 010056Z AUTO 20004MPS 10SM CLR 09/07 A2999 RMK AO2 SLP153 T00940072";
+
+    // when
+    CloudGroupRegexParser parser = new CloudGroupRegexParser();
+    CloudGroup cloudGroup = parser.parse(rawText);
+
+    // then
+    Cloud expected1 = Cloud.withoutAltitude(CloudCoverage.CLR, CloudType.NONE);
+    CloudGroup expected = CloudGroup.builder()
+      .clouds(List.of(expected1))
+      .build();
+
+    assertAll(
+      () -> assertEquals(expected, cloudGroup),
+      () -> assertThrows(IllegalStateException.class, () -> 
+        cloudGroup.getClouds().get(0).getAltitudeOrThrow()
+      )
+    );
+  }
+
+  @Test
+  void 고도가_존재하는_단일구름이_존재하는_경우_구름군_객체의_구름리스트_길이가_1이다() {
+    String rawText = "RKSI 010300Z 17008KT 4000 -RA SCT006 13/13 Q1007 NOSIG";
+
+    // when
+    CloudGroup cloudGroup = parser.parse(rawText);
+
+    // then
+    Cloud expected1 = Cloud.withAltitude(CloudCoverage.SCT, 600, CloudType.NONE);
+
+    CloudGroup expected = CloudGroup.builder()
+      .clouds(List.of(expected1))
+      .build();
+
+    assertEquals(expected, cloudGroup);
+  }
+
+
+  @Test
+  void 고도가_존재하는_구름군이_존재하는_경우_해당_구름군_객체를_반환한다() {
+    String rawText = "RKSI 010300Z 17008KT 4000 -RA SCT006 BKN025 OVC070CB 13/13 Q1007 NOSIG";
+
+    // when
+    CloudGroup cloudGroup = parser.parse(rawText);
+
+    // then
+    Cloud expected1 = Cloud.withAltitude(CloudCoverage.SCT, 600, CloudType.NONE);
+    Cloud expected2 = Cloud.withAltitude(CloudCoverage.BKN, 2500, CloudType.NONE);
+    Cloud expected3 = Cloud.withAltitude(CloudCoverage.OVC, 7000, CloudType.CB);
+
+    CloudGroup expected = CloudGroup.builder()
+      .clouds(List.of(expected1, expected2, expected3))
+      .build();
+
+    assertEquals(expected, cloudGroup);
+  }
+
+  @Test
+  void 구름정보가_없는_메타_파싱성공() {
+    String metar = "RKSI 010300Z 17008KT 4000 -RA 13/13 Q1007 NOSIG";
+
+    CloudGroup cloudGroup = parser.parse(metar);
+
+    assertEquals(cloudGroup.size(), 0);
+  }
+
+  @Test
+  void 단일구름과_임의의_공백을_가진_구름_파싱성공() {
+    String rawText1 = "SCT006";
+    String rawText1a = "SCT006 ";
+    String rawText1b = " SCT006";
+    String rawText1c = " SCT006 ";
+
+    // when
+    CloudGroup cloudGroup1 = parser.parse(rawText1);
+    CloudGroup cloudGroup1a = parser.parse(rawText1a);
+    CloudGroup cloudGroup1b = parser.parse(rawText1b);
+    CloudGroup cloudGroup1c = parser.parse(rawText1c);
+
+    // then
+    Cloud expected1 = Cloud.withAltitude(CloudCoverage.SCT, 600, CloudType.NONE);
+    
+    CloudGroup expected = CloudGroup.builder()
+      .clouds(List.of(expected1))
+      .build();
+
+    assertAll(
+      () -> assertEquals(expected, cloudGroup1),
+      () -> assertEquals(expected, cloudGroup1a),
+      () -> assertEquals(expected, cloudGroup1b),
+      () -> assertEquals(expected, cloudGroup1c)
+    );
+  }
+
+  @Test
+  void 임의의_공백과_구름군을_가진_구름_파싱성공() {
+    String rawText1 = "SCT006 BKN025";
+    String rawText1a = "SCT006 BKN025 ";
+    String rawText1b = " SCT006  BKN025";
+
+    // when
+    CloudGroup cloudGroup1 = parser.parse(rawText1);
+    CloudGroup cloudGroup1a = parser.parse(rawText1a);
+    CloudGroup cloudGroup1b = parser.parse(rawText1b);
+
+    // then
+    Cloud expected1 = Cloud.withAltitude(CloudCoverage.SCT, 600, CloudType.NONE);
+    Cloud expected2 = Cloud.withAltitude(CloudCoverage.BKN, 2500, CloudType.NONE);
+    
+    CloudGroup expected = CloudGroup.builder()
+      .clouds(List.of(expected1, expected2))
+      .build();
+
+    assertAll(
+      () -> assertEquals(expected, cloudGroup1),
+      () -> assertEquals(expected, cloudGroup1a),
+      () -> assertEquals(expected, cloudGroup1b)
+    );
+  }
+
+}

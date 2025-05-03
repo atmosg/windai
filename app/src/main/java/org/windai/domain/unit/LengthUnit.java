@@ -1,7 +1,6 @@
 package org.windai.domain.unit;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 
 @AllArgsConstructor
 public enum LengthUnit {

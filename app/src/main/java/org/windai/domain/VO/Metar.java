@@ -1,7 +1,6 @@
 package org.windai.domain.vo;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -24,7 +23,7 @@ public class Metar {
   private final Pressure altimeter;
   
   // optional fields (ICAO Annex 3)
-  private final List<Weather> weather;
+  private final WeatherGroup weather;
   private final CloudGroup cloud;
   private final String remarks;
 

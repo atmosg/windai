@@ -1,8 +1,6 @@
 package org.windai.domain.policy.parser.metar;
 
-import java.util.Arrays;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 
 import org.windai.domain.exception.GenericPolicyException;
 import org.windai.domain.policy.parser.shared.RegexReportParser;
@@ -11,10 +9,7 @@ import org.windai.domain.vo.Visibility;
 
 public class VisibilityRegexParser extends RegexReportParser<Visibility> {
 
-  private static final String VISIBILITY_REGEX = 
-    Arrays.stream(VisibilityRegexType.values())
-          .map(VisibilityRegexType::getRegex)
-          .collect(Collectors.joining("|"));
+  private static final String VISIBILITY_REGEX = VisibilityRegexs.fullPattern();
 
   @Override
   public Visibility parse(String rawText) {
@@ -25,12 +20,12 @@ public class VisibilityRegexParser extends RegexReportParser<Visibility> {
       }
 
       int visibility = -1;
-      for (VisibilityRegexType type : VisibilityRegexType.values()) {
+      for (VisibilityRegexs type : VisibilityRegexs.values()) {
         String match = matcher.group(type.getGroupName());
         
         if (match == null || match.isEmpty()) continue;
         
-        visibility = type.toMeters(match.trim());
+        visibility = type.toMeters(match);
         break;
       }
 

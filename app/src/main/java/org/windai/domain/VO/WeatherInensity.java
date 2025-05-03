@@ -1,7 +1,9 @@
 package org.windai.domain.vo;
 
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @AllArgsConstructor
 public enum WeatherInensity {
   LIGHT("-"),

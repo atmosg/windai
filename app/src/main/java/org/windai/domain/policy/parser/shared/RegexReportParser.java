@@ -11,7 +11,22 @@ public abstract class RegexReportParser<T> implements ReportParser<T> {
   }
 
   protected boolean check(Matcher matcher) {
-    return matcher.find() && matcher.groupCount() > 0;
+    return matcher.find();
+  }
+
+  protected boolean isMatchedAsRemarks(String rawText, String regex) {
+    Matcher matcher = getMatcher(rawText, regex);
+
+    if (!check(matcher)) return false;
+    int targetIndex = matcher.start();
+    
+    String remarksRegex = "RMK|REMARKS|REMARK|RMK:";
+    Matcher remarkMatcher = getMatcher(rawText, remarksRegex);
+    
+    if (!remarkMatcher.find()) return false;
+    int remarkIndex = remarkMatcher.start();
+    
+    return remarkIndex < targetIndex;
   }
 
 }

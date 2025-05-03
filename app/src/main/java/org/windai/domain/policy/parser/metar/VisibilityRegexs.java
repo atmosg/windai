@@ -1,20 +1,23 @@
 package org.windai.domain.policy.parser.metar;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.windai.domain.exception.GenericPolicyException;
 import org.windai.domain.unit.LengthUnit;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum VisibilityRegexType {
+public enum VisibilityRegexs {
 
-  DIGIT("digit","(?<digit>\\s\\d{2,4}\\s)"),
-  CAVOK("cavok","(?<cavok>\\s*CAVOK\\s)"),
-  P6SM("p6sm","(?<p6sm>\\s*P6SM\\s)"),
-  MILE("mile","(?<mile>\\s*\\d+SM\\s)"), 
-  FRACTION_MILE("fractionMile","(?<fractionMile>\\s[\\d\\/]+SM\\s)"),
-  IMPROPER_FRACTION_MILE("improperFractionMile", "(?<improperFractionMile>\\s\\d+\\s[\\d\\/]+SM\\s)");
-
+  DIGIT("digit","(?<digit>\\d{2,4})"),
+  CAVOK("cavok","(?<cavok>CAVOK)"),
+  P6SM("p6sm","(?<p6sm>P6SM)"),
+  MILE("mile","(?<mile>\\d+SM)"), 
+  FRACTION_MILE("fractionMile","(?<fractionMile>[\\d\\/]+SM)"),
+  IMPROPER_FRACTION_MILE("improperFractionMile", "(?<improperFractionMile>\\d+\\s[\\d\\/]+SM)");
+  
   private final String groupName;
   private final String regex;
 
@@ -24,6 +27,14 @@ public enum VisibilityRegexType {
 
   public String getGroupName() {
     return groupName;
+  }
+
+  public static String fullPattern() {
+    return String.format("((?:^|\\s))(%s)(?=(?:\\s|$))",
+      Arrays.stream(VisibilityRegexs.values())
+        .map(VisibilityRegexs::getRegex)
+        .collect(Collectors.joining("|"))
+    );
   }
 
   public int toMeters(String strValue) {
