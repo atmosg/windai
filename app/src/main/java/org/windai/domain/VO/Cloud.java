@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.windai.domain.exception.GenericSpecificationExeception;
 import org.windai.domain.specification.CloudAltitudeSpec;
+import org.windai.domain.specification.CloudCoverageSpec;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,6 +23,7 @@ public class Cloud {
   @Getter
   private final CloudType type;
 
+  private static final CloudCoverageSpec coverageSpec = new CloudCoverageSpec();
   private static final CloudAltitudeSpec altitudeSpec = new CloudAltitudeSpec();
 
   @Builder
@@ -30,6 +32,7 @@ public class Cloud {
     this.altitude = altitude;
     this.type = type;
 
+    coverageSpec.check(this);
     altitudeSpec.check(this);
   }
 

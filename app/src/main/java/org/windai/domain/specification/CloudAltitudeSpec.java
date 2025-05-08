@@ -5,26 +5,18 @@ import org.windai.domain.specification.shared.AbstractSpecification;
 import org.windai.domain.vo.Cloud;
 
 public class CloudAltitudeSpec extends AbstractSpecification<Cloud> {
-  
+
   @Override
   public boolean isSatisfiedBy(Cloud cloud) {
-    boolean requires = cloud.getCoverage().requiresAltitude();
-    boolean hasAltitude = cloud.getAltitudeOptional().isPresent();
-
-    return requires ? hasAltitude : !hasAltitude;
+    Integer altitude = cloud.getAltitudeOptional().get();
+    return altitude < 100_000;
   }
 
   @Override
-  public void check(Cloud cloud) throws GenericSpecificationExeception {
-    boolean requires = cloud.getCoverage().requiresAltitude();
-    boolean hasAltitude = cloud.getAltitudeOptional().isPresent();
-    
-    if (requires && !hasAltitude) {
-      throw new GenericSpecificationExeception(cloud.getCoverage() + " requires altitude.");
-    }
-
-    if (!requires && hasAltitude) {
-      throw new GenericSpecificationExeception(cloud.getCoverage() + " has no fixed altitude.");
+  public void check(Cloud t) throws GenericSpecificationExeception {
+    if (!isSatisfiedBy(t)) {
+      throw new GenericSpecificationExeception("Cloud altitude can't be graeater than 100,000ft.");
     }
   }
+  
 }

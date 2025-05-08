@@ -33,6 +33,19 @@ public class CloudParserTest {
   }
 
   @Test
+  void 고도가_십만을_넘는_구름을_생성하려고_하면_예외가_발생한다() {
+    // given, when, then
+
+    assertThrows(GenericSpecificationExeception.class, () -> 
+      Cloud.builder()
+        .coverage(CloudCoverage.CLR)
+        .altitude(1000)
+        .type(CloudType.NONE)
+        .build()
+    );
+  }
+
+  @Test
   void 고도가_필수인_구름객체를_생성할때_고도를_누락하면_예외가_발생한다() {
     // given, when, then
 
