@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum PressureUnit {
   HPA(1.0),
-  INHG(33.8639);
+  INHG(0.02953);
 
   private final double toHpaFactor;
 

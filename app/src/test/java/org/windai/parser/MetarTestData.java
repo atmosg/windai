@@ -2,12 +2,14 @@ package org.windai.parser;
 
 import java.util.List;
 
+import org.windai.domain.vo.Metar;
+
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class MetarTestData {
 
-  protected List<String> metars = List.of(
+  protected List<String> rawTextList = List.of(
     "KSFO 030953Z 29008KT 10SM FEW025 SCT250 18/12 A2995 RMK AO2 SLP142 T01780122=",
     "KDEN 281539Z 33012G20KT 10SM FEW030 10/02 A3002 RMK AO2 SLP200 T01000022=",
     "KJFK 031752Z 12009KT 3SM -RA BR OVC011 17/16 A3012 RMK AO2 SLP197 P0004 T01670156=",
@@ -34,8 +36,12 @@ public class MetarTestData {
     "KSFO 030953Z 29008KT P6SM FEW025 SCT250 18/12 A2995 RMK AO2 SLP142 T01780122="
   );
 
+  protected List<Metar> data = List.of(
+    
+  );
+
   public List<String> getTestData() {
-    return metars;
+    return rawTextList;
   }
 
   public List<String> generateWithSpaces(String metar) {

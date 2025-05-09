@@ -13,30 +13,31 @@ public class VisibilityRegexParser extends RegexReportParser<Visibility> {
 
   @Override
   public Visibility parse(String rawText) {
-      Matcher matcher = getMatcher(rawText, VISIBILITY_REGEX);
+    Matcher matcher = getMatcher(rawText, VISIBILITY_REGEX);
 
-      if (!check(matcher)) {
-        throw new GenericPolicyException("Visibility not found in report: " + rawText);
-      }
+    if (!check(matcher)) {
+      throw new GenericPolicyException("Visibility not found in report: " + rawText);
+    }
 
-      int visibility = -1;
-      for (VisibilityRegexs type : VisibilityRegexs.values()) {
-        String match = matcher.group(type.getGroupName());
-        
-        if (match == null || match.isEmpty()) continue;
-        
-        visibility = type.toMeters(match);
-        break;
-      }
+    int visibility = -1;
+    for (VisibilityRegexs type : VisibilityRegexs.values()) {
+      String match = matcher.group(type.getGroupName());
 
-      if (visibility < 0) {
-        throw new GenericPolicyException("Visibility not found in report: " + rawText);
-      }
-      
-      return Visibility.builder()
-              .visibility(visibility)
-              .lengthUnit(LengthUnit.METERS)
-              .build();
+      if (match == null || match.isEmpty())
+        continue;
+
+      visibility = type.toMeters(match);
+      break;
+    }
+
+    if (visibility < 0) {
+      throw new GenericPolicyException("Visibility not found in report: " + rawText);
+    }
+
+    return Visibility.builder()
+        .visibility(visibility)
+        .lengthUnit(LengthUnit.METERS)
+        .build();
   }
 
 }
