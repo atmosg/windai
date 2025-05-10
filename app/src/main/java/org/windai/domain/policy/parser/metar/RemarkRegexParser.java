@@ -6,7 +6,7 @@ import org.windai.domain.policy.parser.shared.RegexReportParser;
 
 public class RemarkRegexParser extends RegexReportParser<String> {
 
-  private static final String REMARK_REGEX = RemarkRegexs.fullPattern();
+  private static final String REMARK_REGEX = RemarkRegexes.fullPattern();
 
   @Override
   public String parse(String rawText) {
@@ -16,7 +16,7 @@ public class RemarkRegexParser extends RegexReportParser<String> {
       return "";
     }
 
-    for (RemarkRegexs type: RemarkRegexs.values()) {
+    for (RemarkRegexes type: RemarkRegexes.values()) {
       String match = matcher.group(type.getGroupName());
 
       if (match == null || match.isEmpty()) {

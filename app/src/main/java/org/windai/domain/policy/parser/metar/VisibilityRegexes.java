@@ -9,7 +9,7 @@ import org.windai.domain.unit.LengthUnit;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum VisibilityRegexs {
+public enum VisibilityRegexes {
 
   DIGIT("digit","(?<digit>\\d{2,4})"),
   CAVOK("cavok","(?<cavok>CAVOK)"),
@@ -31,8 +31,8 @@ public enum VisibilityRegexs {
 
   public static String fullPattern() {
     return String.format("((?:^|\\s))(%s)(?=(?:\\s|$))",
-      Arrays.stream(VisibilityRegexs.values())
-        .map(VisibilityRegexs::getRegex)
+      Arrays.stream(VisibilityRegexes.values())
+        .map(VisibilityRegexes::getRegex)
         .collect(Collectors.joining("|"))
     );
   }

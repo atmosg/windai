@@ -3,7 +3,7 @@ package org.windai.domain.policy.parser.metar;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum RemarkRegexs {
+public enum RemarkRegexes {
   
   RMK("rmk", getRemarkRegex());
 

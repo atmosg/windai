@@ -125,7 +125,7 @@ public class WindTest {
 
     // When
     int minimumCrosswind = new WindOperation()
-        .calculateMinimumCrosswind(wind, List.of(runway), MinimumCrosswindPolicyType.SINGLE);
+        .minimumCrosswind(wind, List.of(runway), MinimumCrosswindPolicyType.SINGLE);
 
     // Then
     assertAll(

@@ -9,7 +9,7 @@ import org.windai.domain.vo.Visibility;
 
 public class VisibilityRegexParser extends RegexReportParser<Visibility> {
 
-  private static final String VISIBILITY_REGEX = VisibilityRegexs.fullPattern();
+  private static final String VISIBILITY_REGEX = VisibilityRegexes.fullPattern();
 
   @Override
   public Visibility parse(String rawText) {
@@ -20,7 +20,7 @@ public class VisibilityRegexParser extends RegexReportParser<Visibility> {
     }
 
     int visibility = -1;
-    for (VisibilityRegexs type : VisibilityRegexs.values()) {
+    for (VisibilityRegexes type : VisibilityRegexes.values()) {
       String match = matcher.group(type.getGroupName());
 
       if (match == null || match.isEmpty())

@@ -12,7 +12,7 @@ import org.windai.domain.vo.TemperaturePair;
 
 public class TemperaturePairRegexParser extends RegexReportParser<TemperaturePair> {
 
-  private static final String TEMPERATURE_PAIR_REGEX = TemperaturePairRegexs.fullPattern();
+  private static final String TEMPERATURE_PAIR_REGEX = TemperaturePairRegexes.fullPattern();
 
   @Override
   public TemperaturePair parse(String rawText) {
@@ -23,7 +23,7 @@ public class TemperaturePairRegexParser extends RegexReportParser<TemperaturePai
     }
     
     Map<String, Temperature> temperatureMap = new HashMap<>();
-    for (TemperaturePairRegexs type : TemperaturePairRegexs.values()) {
+    for (TemperaturePairRegexes type : TemperaturePairRegexes.values()) {
       String match = matcher.group(type.getGroupName());
       
       if (match == null || match.isEmpty()) {
@@ -38,8 +38,8 @@ public class TemperaturePairRegexParser extends RegexReportParser<TemperaturePai
     }
 
     return TemperaturePair.builder()
-      .temperature(temperatureMap.get(TemperaturePairRegexs.TEMPERATURE.getGroupName()))
-      .dewPoint(temperatureMap.get(TemperaturePairRegexs.DEW_POINT.getGroupName()))
+      .temperature(temperatureMap.get(TemperaturePairRegexes.TEMPERATURE.getGroupName()))
+      .dewPoint(temperatureMap.get(TemperaturePairRegexes.DEW_POINT.getGroupName()))
       .build();
 
   }

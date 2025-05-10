@@ -5,7 +5,7 @@ import org.windai.domain.exception.GenericPolicyException;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum TemperaturePairRegexs {
+public enum TemperaturePairRegexes {
   
   TEMPERATURE("temperature", getTemperatureRegex()),
   DEW_POINT("dewPoint", getDewpointRegex());

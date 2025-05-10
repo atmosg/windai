@@ -21,7 +21,7 @@ public class WindOperation {
   private double runwayLengthThreshold = 8000.0;
   private LengthUnit lengthUnit = LengthUnit.METERS;
 
-  public int calculateMinimumCrosswind(Wind wind, List<Runway> runways, MinimumCrosswindPolicyType policyType) {
+  public int minimumCrosswind(Wind wind, List<Runway> runways, MinimumCrosswindPolicyType policyType) {
     switch (policyType) {
       case MULTI:
         return new MultiRunwayMinimumCrosswindPolicy(runwayLengthThreshold, LengthUnit.FEET).calculate(wind, runways);
