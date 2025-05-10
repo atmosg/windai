@@ -5,8 +5,10 @@ import org.windai.domain.specification.RunwayHeadingSpec;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 @EqualsAndHashCode
 public class RunwayEnd {
   

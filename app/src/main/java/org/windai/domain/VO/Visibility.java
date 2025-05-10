@@ -15,5 +15,13 @@ public class Visibility {
 
   private final int visibility;
   private final LengthUnit lengthUnit;
-  
+
+  public boolean isAtLeast(int threshold, LengthUnit targetUnit) {
+    return visibility >= targetUnit.convertTo(threshold, lengthUnit);
+  }
+
+  public boolean isAtMost(int threshold, LengthUnit targetUnit) {
+    return visibility <= targetUnit.convertTo(threshold, lengthUnit);
+  }
+
 }

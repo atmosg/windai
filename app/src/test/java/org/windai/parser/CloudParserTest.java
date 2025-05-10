@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.windai.MetarTestData;
 import org.windai.domain.exception.GenericSpecificationExeception;
 import org.windai.domain.policy.parser.metar.CloudGroupRegexParser;
 import org.windai.domain.vo.Cloud;
@@ -63,8 +64,8 @@ public class CloudParserTest {
     String rawText = "KHYI 010056Z AUTO 20004MPS 10SM CLR 09/07 A2999 RMK AO2 SLP153 T00940072";
 
     // when
-    CloudGroupRegexParser parser = new CloudGroupRegexParser();
-    CloudGroup cloudGroup = parser.parse(rawText);
+    parser.parse(rawText);
+    CloudGroup cloudGroup = parser.getCloudGroup();
 
     // then
     Cloud cloud = Cloud.builder()
@@ -90,7 +91,8 @@ public class CloudParserTest {
     String rawText = "RKSI 010300Z 17008KT 4000 -RA SCT006 13/13 Q1007 NOSIG";
 
     // when
-    CloudGroup cloudGroup = parser.parse(rawText);
+    parser.parse(rawText);
+    CloudGroup cloudGroup = parser.getCloudGroup();
 
     // then
     Cloud expected1 = Cloud.builder()
@@ -112,7 +114,8 @@ public class CloudParserTest {
     String rawText = "RKSI 010300Z 17008KT 4000 -RA SCT006 BKN025 OVC070CB 13/13 Q1007 NOSIG";
 
     // when
-    CloudGroup cloudGroup = parser.parse(rawText);
+    parser.parse(rawText);
+    CloudGroup cloudGroup = parser.getCloudGroup();
 
     // then
     Cloud expected1 = Cloud.builder()
@@ -145,7 +148,8 @@ public class CloudParserTest {
   void 구름정보가_없는_메타_파싱성공() {
     String metar = "RKSI 010300Z 17008KT 4000 -RA 13/13 Q1007 NOSIG";
 
-    CloudGroup cloudGroup = parser.parse(metar);
+    parser.parse(metar);
+    CloudGroup cloudGroup = parser.getCloudGroup();
 
     assertEquals(cloudGroup.size(), 0);
   }
@@ -158,10 +162,17 @@ public class CloudParserTest {
     String rawText1c = " SCT006 ";
 
     // when
-    CloudGroup cloudGroup1 = parser.parse(rawText1);
-    CloudGroup cloudGroup1a = parser.parse(rawText1a);
-    CloudGroup cloudGroup1b = parser.parse(rawText1b);
-    CloudGroup cloudGroup1c = parser.parse(rawText1c);
+    parser.parse(rawText1);
+    CloudGroup cloudGroup1 = parser.getCloudGroup();
+
+    parser.parse(rawText1a);
+    CloudGroup cloudGroup1a = parser.getCloudGroup();
+    
+    parser.parse(rawText1b);
+    CloudGroup cloudGroup1b = parser.getCloudGroup();
+    
+    parser.parse(rawText1c);
+    CloudGroup cloudGroup1c = parser.getCloudGroup();
 
     // then
     Cloud expected1 = Cloud.builder()
@@ -189,9 +200,14 @@ public class CloudParserTest {
     String rawText1b = " SCT006  BKN025";
 
     // when
-    CloudGroup cloudGroup1 = parser.parse(rawText1);
-    CloudGroup cloudGroup1a = parser.parse(rawText1a);
-    CloudGroup cloudGroup1b = parser.parse(rawText1b);
+    parser.parse(rawText1);
+    CloudGroup cloudGroup1 = parser.getCloudGroup();
+    
+    parser.parse(rawText1a);
+    CloudGroup cloudGroup1a = parser.getCloudGroup();
+    
+    parser.parse(rawText1b);
+    CloudGroup cloudGroup1b = parser.getCloudGroup();
 
     // then
     Cloud expected1 = Cloud.builder()

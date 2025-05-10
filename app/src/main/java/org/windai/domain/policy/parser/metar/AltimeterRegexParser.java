@@ -7,37 +7,42 @@ import org.windai.domain.policy.parser.shared.RegexReportParser;
 import org.windai.domain.unit.PressureUnit;
 import org.windai.domain.vo.Pressure;
 
-public class AltimeterRegexParser extends RegexReportParser<Pressure> {
+import lombok.Getter;
+
+@Getter
+public class AltimeterRegexParser extends RegexReportParser {
 
   private static final String ALTIMETER_REGEX = AltimeterRegexs.fullPattern();
 
+  private Pressure altimeter;
+
   @Override
-  public Pressure parse(String rawText) {
+  public void parse(String rawText) {
     Matcher matcher = getMatcher(rawText, ALTIMETER_REGEX);
     if (!check(matcher)) {
       throw new GenericPolicyException("Altimeter not found in report: " + rawText);
     }
 
-    int altimeter = -1;
-    for (AltimeterRegexs type: AltimeterRegexs.values()) {
+    int pascal = -1;
+    for (AltimeterRegexs type : AltimeterRegexs.values()) {
       String match = matcher.group(type.getGroupName());
-      
+
       if (match == null || match.isEmpty())
         continue;
 
-      altimeter = type.toHectoPascal(match);
+      pascal = type.toHectoPascal(match);
       break;
     }
 
-    if (altimeter < 0) {
+    if (pascal < 0) {
       throw new GenericPolicyException("Altimeter not found in report: " + rawText);
     }
-            
-    return Pressure.builder()
-        .value(altimeter)
+
+    altimeter = Pressure.builder()
+        .value(pascal)
         .pressureUnit(PressureUnit.HPA)
         .build();
-    
+
   }
-  
+
 }

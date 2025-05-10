@@ -18,13 +18,13 @@ public class Wind {
 
   public Wind calculateCrosswind(int runwayHeading) {
     double radians = Math.toRadians(direction.getDegreeOrThrow() - 10*runwayHeading);
-    double crosswind = Math.round(speed * Math.abs(Math.sin(radians)));
-    double crosswindGusts = Math.round(gusts * Math.abs(Math.sin(radians)));
+    int crosswind = (int) Math.round(speed * Math.abs(Math.sin(radians)));
+    int crosswindGusts = (int) Math.round(gusts * Math.abs(Math.sin(radians)));
 
     return Wind.builder()
-        .speed((int) crosswind)
+        .speed(crosswind)
         .direction(this.direction)
-        .gusts((int) crosswindGusts)
+        .gusts(crosswindGusts)
         .speedUnit(this.speedUnit)
         .build();
   }

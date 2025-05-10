@@ -1,7 +1,7 @@
 package org.windai.domain.policy.parser.shared;
 
-public interface ReportParser<T> {
+public interface ReportParser {
   
-  T parse(String rawText);
+  void parse(String rawText);
 
 }

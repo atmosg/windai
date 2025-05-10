@@ -4,17 +4,20 @@ import java.util.regex.Matcher;
 
 import org.windai.domain.policy.parser.shared.RegexReportParser;
 
-public class RemarkRegexParser extends RegexReportParser<String> {
+import lombok.Getter;
+
+@Getter
+public class RemarkRegexParser extends RegexReportParser {
 
   private static final String REMARK_REGEX = RemarkRegexes.fullPattern();
 
+  private String remarks = "";
+
   @Override
-  public String parse(String rawText) {
+  public void parse(String rawText) {
     Matcher matcher = getMatcher(rawText, REMARK_REGEX);
 
-    if (!check(matcher)) {
-      return "";
-    }
+    if (!check(matcher)) return;
 
     for (RemarkRegexes type: RemarkRegexes.values()) {
       String match = matcher.group(type.getGroupName());
@@ -23,10 +26,8 @@ public class RemarkRegexParser extends RegexReportParser<String> {
         continue;
       }
 
-      return match.trim();
+      remarks = match.trim();
     }
-
-    return "";
   }
   
 }

@@ -1,30 +1,28 @@
 package org.windai.domain.policy.parser.metar;
 
-import java.util.Arrays;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 
 import org.windai.domain.policy.parser.shared.RegexReportParser;
 import org.windai.domain.vo.MetarReportType;
 
-public class MetarReportTypeRegexParser extends RegexReportParser<MetarReportType> {
+import lombok.Getter;
 
-  private static final String REPORT_TYPE_REGEX = 
-    Arrays.stream(MetarReportType.values())
-      .map(Enum::name)
-      .collect(Collectors.joining("|", "(", ")"));
+@Getter
+public class MetarReportTypeRegexParser extends RegexReportParser {
+
+  private static final String REPORT_TYPE_REGEX = MetarReportTypeRegexes.fullPattern();
+   
+  private MetarReportType reportType = MetarReportType.METAR;
     
   @Override
-  public MetarReportType parse(String rawText) {
+  public void parse(String rawText) {
     Matcher matcher = getMatcher(rawText, REPORT_TYPE_REGEX);
     
-    if (!check(matcher)) {
-      return MetarReportType.METAR;
-    }
+    if (!check(matcher)) return;
+    
+    String type = matcher.group(1);
 
-    String reportType = matcher.group(1);
-
-    return MetarReportType.valueOf(reportType);
+    reportType = MetarReportType.valueOf(type);
   }
   
 }

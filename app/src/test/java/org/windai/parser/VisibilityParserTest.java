@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.windai.MetarTestData;
 import org.windai.domain.exception.GenericPolicyException;
 import org.windai.domain.policy.parser.metar.VisibilityRegexParser;
 import org.windai.domain.unit.LengthUnit;
@@ -34,11 +35,10 @@ public class VisibilityParserTest {
   void 마일시정이_관측된_경우_미터로_변환된_Visibility객체를_반환한다() {
     // given
     String rawText = data.get(0);
-    System.out.println(rawText);
 
     // when
-    Visibility visibility = parser.parse(rawText);
-    System.out.println(visibility);
+    parser.parse(rawText);
+    Visibility visibility = parser.getVisibility();    
 
     // then
     Visibility expected = Visibility.builder()
@@ -55,7 +55,8 @@ public class VisibilityParserTest {
     String rawText = "KSFO 030953Z 29008KT P6SM FEW025 SCT250 18/12 A2995 RMK AO2 SLP142 T01780122=";
 
     // when
-    Visibility visibility = parser.parse(rawText);
+    parser.parse(rawText);
+    Visibility visibility = parser.getVisibility();    
     System.out.println(visibility);
 
     // then
@@ -73,7 +74,8 @@ public class VisibilityParserTest {
     String rawText = "METAR RKPK 030300Z 21008KT CAVOK 16/12 Q1007 RMK CIG070 SLP076 8/72/ 9/35/=";
 
     // when
-    Visibility visibility = parser.parse(rawText);
+    parser.parse(rawText);
+    Visibility visibility = parser.getVisibility();
     System.out.println(visibility);
 
     // then
@@ -91,7 +93,8 @@ public class VisibilityParserTest {
     String rawText = "SPECI RKJK 010647Z VRB11KT 1 3/4SM -RA BR OVC004 15/14 A2969 RMK AO2A VIS 1 3/4V3 RAB0555E25RAB42E43DZB43E46RAB46 CIG 004V006 CIG 003 RWY18 SLPNO $=";
 
     // when
-    Visibility visibility = parser.parse(rawText);
+    parser.parse(rawText);
+    Visibility visibility = parser.getVisibility();
     System.out.println(visibility);
 
     // then
@@ -109,7 +112,8 @@ public class VisibilityParserTest {
     String rawText = "SPECI RKJK 010647Z VRB11KT 3/4SM -RA BR OVC004 15/14 A2969 RMK AO2A VIS 1 3/4V3 RAB0555E25RAB42E43DZB43E46RAB46 CIG 004V006 CIG 003 RWY18 SLPNO $=";
 
     // when
-    Visibility visibility = parser.parse(rawText);
+    parser.parse(rawText);
+    Visibility visibility = parser.getVisibility();
     System.out.println(visibility);
 
     // then
@@ -139,31 +143,46 @@ public class VisibilityParserTest {
 
     // then
     int actual1 = (int) test.generateWithSpaces(rawText1).stream()
-      .map(parser::parse)
+      .map(text -> {
+        parser.parse(text);
+        return parser.getVisibility();
+      })
       .map(Visibility::getVisibility)
       .filter(vis -> vis == expected1)
       .count();
 
     int actual2 = (int) test.generateWithSpaces(rawText2).stream()
-      .map(parser::parse)
+      .map(text -> {
+        parser.parse(text);
+        return parser.getVisibility();
+      })
       .map(Visibility::getVisibility)
       .filter(vis -> vis == expected2)
       .count();
     
     int actual3 = (int) test.generateWithSpaces(rawText3).stream()
-      .map(parser::parse)
+      .map(text -> {
+        parser.parse(text);
+        return parser.getVisibility();
+      })
       .map(Visibility::getVisibility)
       .filter(vis -> vis == expected3)
       .count();
     
     int actual4 = (int) test.generateWithSpaces(rawText4).stream()
-      .map(parser::parse)
+      .map(text -> {
+        parser.parse(text);
+        return parser.getVisibility();
+      })
       .map(Visibility::getVisibility)
       .filter(vis -> vis == expected4)
       .count();
     
     int actual5 = (int) test.generateWithSpaces(rawText5).stream()
-      .map(parser::parse)
+      .map(text -> {
+        parser.parse(text);
+        return parser.getVisibility();
+      })
       .map(Visibility::getVisibility)
       .filter(vis -> vis == expected5)
       .count();

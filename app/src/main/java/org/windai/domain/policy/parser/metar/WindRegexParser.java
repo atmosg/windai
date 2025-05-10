@@ -1,7 +1,5 @@
 package org.windai.domain.policy.parser.metar;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 import org.windai.domain.exception.GenericPolicyException;
@@ -10,12 +8,17 @@ import org.windai.domain.unit.SpeedUnit;
 import org.windai.domain.vo.Wind;
 import org.windai.domain.vo.WindDirection;
 
-public class WindRegexParser extends RegexReportParser<Wind> {
+import lombok.Getter;
+
+@Getter
+public class WindRegexParser extends RegexReportParser {
     
   private static final String WIND_REGEX = WindRegexes.fullPattern();
   
+  private Wind wind;
+
   @Override
-  public Wind parse(String rawText) {
+  public void parse(String rawText) {
     Matcher matcher = getMatcher(rawText, WIND_REGEX);
 
     if (!check(matcher)) {
@@ -35,7 +38,7 @@ public class WindRegexParser extends RegexReportParser<Wind> {
     int windGustsValue = windGusts != null ? Integer.parseInt(windGusts) : 0;
     SpeedUnit speedUnit = windUnit.equals("KT") ? SpeedUnit.KT : SpeedUnit.MPS;
 
-    return Wind.builder()
+    wind = Wind.builder()
         .direction(direction)
         .speed(windSpeedValue)
         .gusts(windGustsValue)

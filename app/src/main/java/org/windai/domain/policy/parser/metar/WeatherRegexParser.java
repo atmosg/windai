@@ -10,18 +10,21 @@ import org.windai.domain.vo.WeatherDescriptor;
 import org.windai.domain.vo.WeatherInensity;
 import org.windai.domain.vo.WeatherPhenomenon;
 
-public class WeatherRegexParser extends RegexReportParser<Weather> {
+import lombok.Getter;
+
+@Getter
+public class WeatherRegexParser extends RegexReportParser {
   
   private static final String WEATHER_REGEX = WeatherRegexes.fullPattern();
   private static final String PHENOMENON_REGEX = WeatherRegexes.PHENOMENON.getRegex();
 
+  private Weather weather;
+
   @Override
-  public Weather parse(String rawText) {
+  public void parse(String rawText) {
     Matcher matcher = getMatcher(rawText, WEATHER_REGEX);
 
-    if (!check(matcher)) {
-      return null;
-    }
+    if (!check(matcher)) return;
     
     String intensityMatch = matcher.group(1);
     String descriptorMatch = matcher.group(2);
@@ -37,11 +40,9 @@ public class WeatherRegexParser extends RegexReportParser<Weather> {
     
     List<WeatherPhenomenon> phenomena = parsePhenomena(phenomenonMatch, PHENOMENON_REGEX);
 
-    if (descriptor == null && phenomena.isEmpty()) {
-      return null;
-    }
-
-    return Weather.builder()
+    if (descriptor == null && phenomena.isEmpty()) return;
+    
+    weather = Weather.builder()
       .intensity(intensity)
       .descriptor(descriptor)
       .phenomena(phenomena)

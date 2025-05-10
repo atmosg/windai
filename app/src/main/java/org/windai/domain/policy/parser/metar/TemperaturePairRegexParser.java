@@ -10,12 +10,17 @@ import org.windai.domain.unit.TemperatureUnit;
 import org.windai.domain.vo.Temperature;
 import org.windai.domain.vo.TemperaturePair;
 
-public class TemperaturePairRegexParser extends RegexReportParser<TemperaturePair> {
+import lombok.Getter;
+
+@Getter
+public class TemperaturePairRegexParser extends RegexReportParser {
 
   private static final String TEMPERATURE_PAIR_REGEX = TemperaturePairRegexes.fullPattern();
 
+  private TemperaturePair temperaturePair;
+
   @Override
-  public TemperaturePair parse(String rawText) {
+  public void parse(String rawText) {
     Matcher matcher = getMatcher(rawText, TEMPERATURE_PAIR_REGEX);
 
     if (!check(matcher)) {
@@ -37,7 +42,7 @@ public class TemperaturePairRegexParser extends RegexReportParser<TemperaturePai
       );
     }
 
-    return TemperaturePair.builder()
+    temperaturePair = TemperaturePair.builder()
       .temperature(temperatureMap.get(TemperaturePairRegexes.TEMPERATURE.getGroupName()))
       .dewPoint(temperatureMap.get(TemperaturePairRegexes.DEW_POINT.getGroupName()))
       .build();

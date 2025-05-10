@@ -1,6 +1,8 @@
 package org.windai.domain.vo;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -21,6 +23,37 @@ public class Weather {
     this.intensity = intensity;
     this.descriptor = descriptor;
     this.phenomena = List.copyOf(phenomena);
+  }
+
+  public boolean containsPhenomena(String target) {
+    try {
+      List<WeatherPhenomenon> targetList = IntStream
+        .range(0, target.length()/2)
+        .mapToObj(idx -> target.substring(idx*2, 2*(idx+1)))
+        .map(WeatherPhenomenon::valueOf)
+        .collect(Collectors.toList());
+        
+      return containsPhenomena(targetList);
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
+  }
+
+  public boolean containsPhenomena(List<WeatherPhenomenon> targetList) {
+    if (targetList.isEmpty()) return true;
+    
+    int targetIndex = 0;
+    for (WeatherPhenomenon p : this.phenomena) {
+      if (p.equals(targetList.get(targetIndex))) {
+        targetIndex++;
+      }
+
+      if (targetIndex == targetList.size()) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 }

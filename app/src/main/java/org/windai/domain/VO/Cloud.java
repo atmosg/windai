@@ -1,5 +1,6 @@
 package org.windai.domain.vo;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.windai.domain.exception.GenericSpecificationExeception;
@@ -49,6 +50,14 @@ public class Cloud {
 
   public boolean hasCloudType() {
     return type != CloudType.NONE;
+  }
+
+  public boolean isAltitudeAtMost(Integer threshold, List<CloudCoverage> targetCoverages) {
+    for (CloudCoverage target : targetCoverages) {
+      if (coverage == target && altitude <= threshold) return true;
+    }
+
+    return false;
   }
 
 }

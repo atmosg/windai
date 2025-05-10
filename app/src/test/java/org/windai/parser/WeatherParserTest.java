@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.windai.MetarTestData;
 import org.windai.domain.policy.parser.metar.WeatherGroupRegexParser;
 import org.windai.domain.policy.parser.metar.WeatherRegexParser;
 import org.windai.domain.vo.Weather;
@@ -26,7 +27,8 @@ public class WeatherParserTest {
     System.out.println(rawText);
     
     // when
-    Weather weather = parser.parse(rawText);
+    parser.parse(rawText);
+    Weather weather = parser.getWeather();
     System.out.println(weather);
 
     // then
@@ -40,7 +42,8 @@ public class WeatherParserTest {
     System.out.println(rawText);
     
     // when
-    Weather weather = parser.parse(rawText);
+    parser.parse(rawText);
+    Weather weather = parser.getWeather();
     System.out.println(weather);
 
     // then
@@ -65,7 +68,8 @@ public class WeatherParserTest {
     System.out.println(rawText);
     
     // when
-    Weather weather = parser.parse(rawText);
+    parser.parse(rawText);
+    Weather weather = parser.getWeather();
     System.out.println(weather);
 
     // then
@@ -89,7 +93,8 @@ public class WeatherParserTest {
     System.out.println(rawText);
 
     // when
-    WeatherGroup weatherGroup = groupParser.parse(rawText);
+    groupParser.parse(rawText);
+    WeatherGroup weatherGroup = groupParser.getWeatherGroup();
     System.out.println(weatherGroup);
 
     // then

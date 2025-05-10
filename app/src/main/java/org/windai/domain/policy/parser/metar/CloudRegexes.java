@@ -11,11 +11,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum CloudRegexes {
 
-  COVERAGE(getCoverageRegex()),
-  TYPE(getTypeRegex()),
-  ALTITUDE(getAltitudeRegex());
+  COVERAGE("coverage", getCoverageRegex()),
+  TYPE("type", getTypeRegex()),
+  ALTITUDE("altitude", getAltitudeRegex());
 
+  private final String groupName;
   private final String regex;
+
+  public String getGroupName() {
+    return groupName;
+  }
 
   public String getRegex() {
     return regex;
@@ -31,17 +36,17 @@ public enum CloudRegexes {
   private static String getCoverageRegex() {
     return Arrays.stream(CloudCoverage.values())
         .map(Enum::name)
-        .collect(Collectors.joining("|"));
+        .collect(Collectors.joining("|", "(?<coverage>", ")"));
   }
 
   private static String getTypeRegex() {
     return Arrays.stream(CloudType.values())
         .map(Enum::name)
-        .collect(Collectors.joining("|"));
+        .collect(Collectors.joining("|", "(?<type>", ")"));
   }
 
   private static String getAltitudeRegex() {
-    return "\\d{2,3}";
+    return "(?<altitude>\\d{2,3})";
   }
 
 }

@@ -24,7 +24,7 @@ public class WindOperation {
   public int minimumCrosswind(Wind wind, List<Runway> runways, MinimumCrosswindPolicyType policyType) {
     switch (policyType) {
       case MULTI:
-        return new MultiRunwayMinimumCrosswindPolicy(runwayLengthThreshold, LengthUnit.FEET).calculate(wind, runways);
+        return new MultiRunwayMinimumCrosswindPolicy(runwayLengthThreshold, LengthUnit.METERS).calculate(wind, runways);
       case SINGLE:
         return new SingleRunwayMinimumCrosswindPolicy().calculate(wind, runways);
       default:

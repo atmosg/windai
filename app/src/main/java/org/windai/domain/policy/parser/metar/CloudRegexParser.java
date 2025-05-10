@@ -8,21 +8,24 @@ import org.windai.domain.vo.Cloud;
 import org.windai.domain.vo.CloudCoverage;
 import org.windai.domain.vo.CloudType;
 
-public class CloudRegexParser extends RegexReportParser<Cloud> {
+import lombok.Getter;
+
+@Getter
+public class CloudRegexParser extends RegexReportParser {
 
   private static final String CLOUD_REGEX = CloudRegexes.fullPattern();
 
+  private Cloud cloud;
+
   @Override
-  public Cloud parse(String rawText) {
+  public void parse(String rawText) {
     Matcher matcher = getMatcher(rawText, CLOUD_REGEX);
     
-    if (!check(matcher)) {
-      return null;
-    }
-
-    String coverageMatch = matcher.group(1);
-    String altitudeMatch = matcher.group(2);
-    String typeMatch = matcher.group(3);
+    if (!check(matcher)) return;
+    
+    String coverageMatch = matcher.group(CloudRegexes.COVERAGE.getGroupName());
+    String altitudeMatch = matcher.group(CloudRegexes.ALTITUDE.getGroupName());
+    String typeMatch = matcher.group(CloudRegexes.TYPE.getGroupName());
 
     CloudCoverage coverage = CloudCoverage.valueOf(coverageMatch);
     CloudType type = typeMatch != null 
@@ -38,17 +41,18 @@ public class CloudRegexParser extends RegexReportParser<Cloud> {
         throw new GenericPolicyException("Altitude not found in report: " + rawText);
       }
 
-      return Cloud.builder()
+      cloud = Cloud.builder()
         .coverage(coverage)
         .altitude(altitude)
         .type(type)
         .build();
-    } 
+    } else {
+      cloud = Cloud.builder()
+        .coverage(coverage)
+        .type(type)
+        .build();
+    }
     
-    return Cloud.builder()
-      .coverage(coverage)
-      .type(type)
-      .build();
   }
   
 }

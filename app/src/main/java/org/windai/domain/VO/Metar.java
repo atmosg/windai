@@ -14,7 +14,7 @@ public class Metar {
   private final String rawText;
   
   // required fields (ICAO Annex 3)
-  private final String stationId;
+  private final String station;
   private final MetarReportType reportType;
   private final ZonedDateTime observationTime;
   private final Wind wind;
@@ -23,8 +23,8 @@ public class Metar {
   private final Pressure altimeter;
   
   // optional fields (ICAO Annex 3)
-  private final WeatherGroup weather;
-  private final CloudGroup cloud;
+  private final WeatherGroup weatherGroup;
+  private final CloudGroup cloudGroup;
   private final String remarks;
 
 

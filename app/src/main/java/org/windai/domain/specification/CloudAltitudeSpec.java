@@ -1,5 +1,7 @@
 package org.windai.domain.specification;
 
+import java.util.Optional;
+
 import org.windai.domain.exception.GenericSpecificationExeception;
 import org.windai.domain.specification.shared.AbstractSpecification;
 import org.windai.domain.vo.Cloud;
@@ -8,8 +10,11 @@ public class CloudAltitudeSpec extends AbstractSpecification<Cloud> {
 
   @Override
   public boolean isSatisfiedBy(Cloud cloud) {
-    Integer altitude = cloud.getAltitudeOptional().get();
-    return altitude < 100_000;
+    Optional<Integer> altitude = cloud.getAltitudeOptional();
+    if (altitude.isPresent()) {
+      return altitude.get() < 100_000;
+    }
+    return true;
   }
 
   @Override

@@ -7,35 +7,40 @@ import org.windai.domain.policy.parser.shared.RegexReportParser;
 import org.windai.domain.unit.LengthUnit;
 import org.windai.domain.vo.Visibility;
 
-public class VisibilityRegexParser extends RegexReportParser<Visibility> {
+import lombok.Getter;
+
+@Getter
+public class VisibilityRegexParser extends RegexReportParser {
 
   private static final String VISIBILITY_REGEX = VisibilityRegexes.fullPattern();
 
+  private Visibility visibility;
+
   @Override
-  public Visibility parse(String rawText) {
+  public void parse(String rawText) {
     Matcher matcher = getMatcher(rawText, VISIBILITY_REGEX);
 
     if (!check(matcher)) {
       throw new GenericPolicyException("Visibility not found in report: " + rawText);
     }
 
-    int visibility = -1;
+    int vis = -1;
     for (VisibilityRegexes type : VisibilityRegexes.values()) {
       String match = matcher.group(type.getGroupName());
 
       if (match == null || match.isEmpty())
         continue;
 
-      visibility = type.toMeters(match);
+      vis = type.toMeters(match);
       break;
     }
 
-    if (visibility < 0) {
+    if (vis < 0) {
       throw new GenericPolicyException("Visibility not found in report: " + rawText);
     }
 
-    return Visibility.builder()
-        .visibility(visibility)
+    visibility = Visibility.builder()
+        .visibility(vis)
         .lengthUnit(LengthUnit.METERS)
         .build();
   }

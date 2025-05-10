@@ -3,7 +3,7 @@ package org.windai.domain.policy.parser.shared;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class RegexReportParser<T> implements ReportParser<T> {
+public abstract class RegexReportParser implements ReportParser {
 
   protected Matcher getMatcher(String rawText, String regex) {
     Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);

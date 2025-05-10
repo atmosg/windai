@@ -1,4 +1,4 @@
-package org.windai.parser;
+package org.windai;
 
 import java.util.List;
 

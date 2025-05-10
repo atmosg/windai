@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.windai.MetarTestData;
 import org.windai.domain.exception.GenericPolicyException;
 import org.windai.domain.policy.parser.metar.TemperaturePairRegexParser;
 import org.windai.domain.unit.TemperatureUnit;
@@ -21,7 +22,8 @@ public class TemperaturePairParserTest {
   void 양의_온도쌍을_가진_메타_파싱에_성공해야한다() {
     String rawText = data.get(0);
 
-    TemperaturePair pair = parser.parse(rawText);
+    parser.parse(rawText);
+    TemperaturePair pair = parser.getTemperaturePair();
 
     Temperature expectedT = Temperature.builder()
         .unit(TemperatureUnit.CELSIUS)
@@ -45,7 +47,8 @@ public class TemperaturePairParserTest {
   void 양의_온도와_음의_이슬점을_갖는_메타_파싱에_성공해야한다() {
     String rawText = data.get(1);
 
-    TemperaturePair pair = parser.parse(rawText);
+    parser.parse(rawText);
+    TemperaturePair pair = parser.getTemperaturePair();
 
     Temperature expectedT = Temperature.builder()
         .unit(TemperatureUnit.CELSIUS)
@@ -69,7 +72,8 @@ public class TemperaturePairParserTest {
   void 음의_온도와_양의_이슬점을_갖는_메타_파싱에_성공해야한다() {
     String rawText = data.get(2);
 
-    TemperaturePair pair = parser.parse(rawText);
+    parser.parse(rawText);
+    TemperaturePair pair = parser.getTemperaturePair();
 
     Temperature expectedT = Temperature.builder()
         .unit(TemperatureUnit.CELSIUS)
@@ -93,7 +97,8 @@ public class TemperaturePairParserTest {
   void 음의_온도쌍을_갖는_메타_파싱에_성공해야한다() {
     String rawText = data.get(3);
 
-    TemperaturePair pair = parser.parse(rawText);
+    parser.parse(rawText);
+    TemperaturePair pair = parser.getTemperaturePair();
 
     Temperature expectedT = Temperature.builder()
         .unit(TemperatureUnit.CELSIUS)
